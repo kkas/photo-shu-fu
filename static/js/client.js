@@ -18,44 +18,49 @@ $(document).ready(function(){
    $camera_img.bind(
        (function() {
            // considered as a longpress after this value in milliseconds.
-           const longpress = 3000;
+           const longpress = 1500;
            // start time
            let start_time = 0;
 
            return {
                contextmenu: function() { return false; }, // To prevent right click menu on labtops.
-               mousedown: function() {
-                   console.log("mousedown fired");
-                   $main_div.append('<p>' + 'mousedown fired' + '</p>');
+//               mousedown: function() {
+//                   console.log("mousedown fired");
+//                   $main_div.append('<p>' + 'mousedown fired' + '</p>');
+//                   return false;
+//               },
+//               mouseleave: function() {
+//                   console.log("mouseleave fired");
+//                   $main_div.append('<p>' + 'mouseleave fired' + '</p>');
+//                   start_time = 0;
+//                   return false;
+//               },
+//               mouseup: function() {
+//                   console.log("mouseup fired");
+//                   $main_div.append('<p>' + 'mouseup fired' + '</p>');
+//                   return false;
+//               },
+               touchstart: function() {
+                   console.log("touchstart fired");
                    start_time = new Date().getTime();
                    return false;
                },
-               mouseleave: function() {
-                   $main_div.append('<p>' + 'mouseleave fired' + '</p>');
-                   start_time = 0;
-                   return false;
-               },
-               mouseup: function() {
-                   $main_div.append('<p>' + 'mouseup fired' + '</p>');
+//               touchmove: function() {
+//                   console.log("touchmove fired");
+//                   return false;
+//               },
+               touchend: function() {
+                   console.log("touchend fired");
+
                    if (new Date().getTime() >= (start_time + longpress)) {
                       console.log("long press");
                       $main_div.append('<p>' + 'long press' + '</p>');
+                      $input_image.trigger('change');
                    } else {
                       console.log("short press");
                       $main_div.append('<p>' + 'short press' + '</p>');
                    }
-                   return false;
-               },
-               touchstart: function() {
-                   $main_div.append('<p>' + 'touchstart fired' + '</p>');
-                   return false;
-               },
-               touchmove: function() {
-                   $main_div.append('<p>' + 'touchmove fired' + '</p>');
-                   return false;
-               },
-               touchend: function() {
-                   $main_div.append('<p>' + 'touchend fired' + '</p>');
+
                    return false;
                },
            }
@@ -64,13 +69,17 @@ $(document).ready(function(){
 
    // Set an event when the client selects an image.
    $input_image.change(function(evt) {
-      // Retrieve the selected image.
-      const file = this.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);  // The data will be encoded as base64.
+      console.log('$input_image change called. evt: ', evt);
 
-      // Set a callback function to render the selected image when the file is loaded.
-      reader.onload = load_preview_image;
+      // Retrieve the selected image.
+      if (this.files.length != 0) {
+          const file = this.files[0];
+          const reader = new FileReader();
+          reader.readAsDataURL(file);  // The data will be encoded as base64.
+
+          // Set a callback function to render the selected image when the file is loaded.
+          reader.onload = load_preview_image;
+      }
    });
 
    const load_preview_image = function(evt) {
