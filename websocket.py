@@ -28,7 +28,7 @@ gen_log = logging.getLogger("tornado.general")
 redis_url = os.environ.get('REDISCLOUD_URL')
 url = urlparse(redis_url)
 
-gen_log.error("url: %s", url)
+gen_log.error("url_redis: %s", url)
 
 r = redis.Redis(host=url.hostname, port=url.port, password=url.password)
 

@@ -16,6 +16,8 @@ gen_log = logging.getLogger("tornado.general")
 pg_url = os.environ.get('DATABASE_URL')
 url = urlparse(pg_url)
 
+print('url_pg:{0}'.format(url))
+
 engine = create_engine(
     "{dialect}+{driver}://{user}:{password}@{host}:{port}/{database}".format(**{
         'dialect': "postgresql",
