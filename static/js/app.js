@@ -196,6 +196,10 @@
           console.log("evt.data:", evt.data);
 
           const data = JSON.parse(evt.data);
+          if (data.msg && data.msg == "PONG") {
+             return;
+          }
+
           let url = global.location.origin + "/picture/" + data["id"];
           console.log("url for the image: ", url);
 
@@ -204,7 +208,6 @@
           */
           $.when(get_image(url))
              .done((data) => {
-                console.log("data: ", data);
                 addImage(data);
              })
              .fail((data) => {
@@ -214,8 +217,12 @@
 
        ws._check_connection = function() {
            console.log('ws._check_connection called.');
-           ws.send("{'to': main, 'data': 'Ping'}");
+           this._send_PING();
        };
+
+       ws._send_PING = function() {
+           ws.send("PING");
+       }
 
        ws.onclose = function(close) {
            console.log('ws.onclose() called.');
@@ -226,5 +233,19 @@
            console.log('ws.onerror() called.');
            console.log('evt:', evt);
        };
+
+       // Periodic PING-PONG messaging to prevent the conncetion terminated by Heroku.
+       //https://devcenter.heroku.com/articles/error-codes#h15-idle-connection
+       let INTERVAL = 10000; // 10sec
+       const send_PING = function() {
+           console.log("send_PING called");
+           if(ws) {
+           console.log("true");
+               ws._send_PING()
+           } else {
+               console.log("false");
+           }
+       };
+       let intervalID = setInterval(send_PING, INTERVAL);
     });
 })(this);

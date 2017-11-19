@@ -131,6 +131,9 @@ class WebSocketServer(tornado.websocket.WebSocketHandler):
     client = RedisClient(r)
     client.start()
 
+    _PING = "PING"
+    _PONG = "PONG"
+
     #TODO: Remove this at production
     def check_origin(self, origin):
         return True
@@ -148,17 +151,9 @@ class WebSocketServer(tornado.websocket.WebSocketHandler):
         :param message: that is sent by one of the clients.
         :return: None
         """
-        # # If the massage is for the screen application to be distinguished.
-        # if re.match(self._SCREEN_APP, message):
-        #     gen_log.error("_SCREEN_APP detected")
-        #     gen_log.error("self: %s", self)
-        #     self._screen_app_ws_conn[self._SCREEN_APP] = self
-        #     pass
-
-        # Send the message only to the screen application.
-        # if self._screen_app_ws_conn[self._SCREEN_APP]:
-        #     self._screen_app_ws_conn[self._SCREEN_APP].write_message(message)
-        pass
+        if self._PING == message:
+            # return PONG message to the client when PING message is arrived.
+            WS_CLIENTS[0].write_message({'status': "OK", 'msg': self._PONG})
 
     @classmethod
     def send_notification(cls, data):
