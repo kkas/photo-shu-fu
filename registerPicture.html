@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Custom CSS -->
+    <!--<link rel="stylesheet" href="{{ static_url("static/style.css") }}"/>-->
+    <!--<link rel="stylesheet" href="static/static/style.css"/>-->
+    <style>
+body { }
+
+img {
+    max-width: 100%;
+    max-height: 90vh;
+    width: auto;
+
+    overflow-y: hidden; // hide vertical
+    overflow-x: hidden; // hide horizontal
+
+    // Prevent unnecessary image context menus.
+    touch-callout:none;
+	user-select:none;
+	-webkit-touch-callout:none;
+	-webkit-user-select:none;
+	-moz-touch-callout:none;
+	-moz-user-select:none;
+}
+
+// This doesn't work...
+.disable-3d-touch {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+
+#main {
+    width: 80%;
+    margin: 0 auto;
+}
+
+#image {
+    display: none;
+}
+</style>
+    <title>Register Picture</title>
+</head>
+<body>
+    <div id="main">
+        <div id="instruction">
+            <label for="image">
+                <img id="camera_img" src="static/static/assets/img/photo-camera.svg">
+            </label>
+            <input type="file" id="image" accept="image/*" capture="camera">
+            <p>Tap the icon or taphold it for selecting a picture.</p>
+        </div>
+
+        <div id="preview">
+           <div id="preview_placeholder"></div>
+        </div>
+    </div>
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+    <script src="static/static/temp/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="static/static/js/client.js"></script>
+</body>
+</html>

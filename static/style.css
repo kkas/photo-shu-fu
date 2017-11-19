@@ -1,0 +1,11 @@
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img {
+  position: absolute;
+  padding: 10px;
+  background-color: #fce0b8;
+  max-height: 80%;
+}
