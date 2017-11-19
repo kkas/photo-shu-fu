@@ -14,59 +14,6 @@ $(document).ready(function(){
        ws.send("NEW:" + url);
    };
 
-   // Set an event when the client taphold the camera image.
-   $camera_img.bind(
-       (function() {
-           // considered as a longpress after this value in milliseconds.
-           const longpress = 1500;
-           // start time
-           let start_time = 0;
-
-           return {
-               contextmenu: function() { return false; }, // To prevent right click menu on labtops.
-//               mousedown: function() {
-//                   console.log("mousedown fired");
-//                   $main_div.append('<p>' + 'mousedown fired' + '</p>');
-//                   return false;
-//               },
-//               mouseleave: function() {
-//                   console.log("mouseleave fired");
-//                   $main_div.append('<p>' + 'mouseleave fired' + '</p>');
-//                   start_time = 0;
-//                   return false;
-//               },
-//               mouseup: function() {
-//                   console.log("mouseup fired");
-//                   $main_div.append('<p>' + 'mouseup fired' + '</p>');
-//                   return false;
-//               },
-               touchstart: function() {
-                   console.log("touchstart fired");
-                   start_time = new Date().getTime();
-                   return false;
-               },
-//               touchmove: function() {
-//                   console.log("touchmove fired");
-//                   return false;
-//               },
-               touchend: function() {
-                   console.log("touchend fired");
-
-                   if (new Date().getTime() >= (start_time + longpress)) {
-                      console.log("long press");
-                      $main_div.append('<p>' + 'long press' + '</p>');
-                      $input_image.trigger('change');
-                   } else {
-                      console.log("short press");
-                      $main_div.append('<p>' + 'short press' + '</p>');
-                   }
-
-                   return false;
-               },
-           }
-       })(),
-   );
-
    // Set an event when the client selects an image.
    $input_image.change(function(evt) {
       console.log('$input_image change called. evt: ', evt);
