@@ -1,0 +1,23 @@
+{
+  "name": "photo-shu-fu",
+  "version": "1.0.0",
+  "description": "Photo-Shu-Fu is a photo slide show application that enables the users to communicate with people, even in distance.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kkas/photo-shu-fu.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kkas/photo-shu-fu/issues"
+  },
+  "homepage": "https://github.com/kkas/photo-shu-fu#readme",
+  "devDependencies": {
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-react": "^7.5.1"
+  }
+}
