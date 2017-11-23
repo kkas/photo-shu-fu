@@ -5,7 +5,6 @@ $(document).ready(function(){
    const $input_image = $('#image');
    const $instruction =$('#instruction');
    const $camera_img = $('#camera_img');
-   const $preview = $('#preview');
    const $preview_placeholder = $('#preview_placeholder');
 
    const send = function(url) {
