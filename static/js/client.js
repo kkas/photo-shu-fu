@@ -1,109 +1,106 @@
-$(document).ready(function(){
-   let $main_div = $('#main');
-   let URL = location.origin;
+// TODO: Move this to somewhere else.
+const Console = {
+  log: function logToConsole(...args) {
+    console.log(args);
+  },
+};
 
-   const $input_image = $('#image');
-   const $instruction =$('#instruction');
-   const $camera_img = $('#camera_img');
-   const $preview_placeholder = $('#preview_placeholder');
+const app = function mainApp(global) {
+  const $mainDiv = $('#main');
+  const $inputImage = $('#image');
+  const $instruction = $('#instruction');
+  const $previewPlaceholder = $('#preview_placeholder');
 
-   const send = function(url) {
-       $main_div.append('<p>' + URL + 'registerPicture' + 'called </p>');
-       //ws.send("NEW:https://photo-shu-fu.herokuapp.com/static/static/cute_cat2.jpg");
-       ws.send("NEW:" + url);
-   };
+  // TODO: Move this to somewhere else.
+  const concatStrings = function concatenateStrings(...args) {
+    return args.join(',');
+  };
 
-   // Set an event when the client selects an image.
-   $input_image.change(function(evt) {
-      console.log('$input_image change called. evt: ', evt);
+  const removePreviewImage = function removePreviewImage() {
+    Console.log('removePreviewImage called');
+    $previewPlaceholder.empty();
+  };
 
-      // Retrieve the selected image.
-      if (this.files.length != 0) {
-          const file = this.files[0];
-          const reader = new FileReader();
-          reader.readAsDataURL(file);  // The data will be encoded as base64.
+  const restoreInstruction = function restoreInstruction() {
+    Console.log('restoreInstruction called');
+    $instruction.show();
+  };
 
-          // Set a callback function to render the selected image when the file is loaded.
-          reader.onload = load_preview_image;
-      }
-   });
+  // Send a POST request to the server's api and register the picture selected by the client.
+  // TODO: Replace this with the throwing animation.
+  const postImage = function postImage(evt) {
+    evt.preventDefault();
 
-   const load_preview_image = function(evt) {
-      console.log('load_preview_image called. evt: ', evt);
+    const imageSrc = evt.target.src;
 
-      // Hide the instruction.
-      hide_instruction();
+    // Send a post request
+    $.ajax({
+      url: 'picture',
+      type: 'POST',
+      data: JSON.stringify({
+        data: imageSrc,
+      }),
+      // contentType: false,       // The content type used when sending data to the server.
+      // cache: false,             // To unable request pages to be cached.
+      // processData: false,       // Needs to be set 'false' since I am uploading an image.
+      success: function postData(data) {
+        $mainDiv.append(concatStrings('<p>', 'POST succeeded. data:', data, '</p>'));
+        Console.log('data:', data);
+        // Remove the picture from the img element.
+        removePreviewImage();
 
-      // Render the preview image.
-      render_preview_image(evt);
-   }
+        // Restore the icon.
+        restoreInstruction();
+      },
+    });
+  };
 
-   const render_preview_image = function(evt) {
-      console.log('render_preview_image called. evt: ', evt);
+  const renderPreviewImage = function renderPreviewImage(evt) {
+    Console.log('renderPreviewImage called. evt: ', evt);
 
-      // Retrieve or create the new Img element.
-      let $new_img = $('#selected_image');
-      if ($new_img.length == 0) {
-          // Create one.
-          $new_img = $("<img id='selected_image'>");
+    // Retrieve or create the new Img element.
+    let $newImg = $('#selected_image');
+    if ($newImg.length === 0) {
+      // Create one.
+      $newImg = $("<img id='selected_image'>");
+      // Add an onclick event to send the picture.
+      $newImg.click(postImage);
+    }
+    // Load the selected image.
+    $newImg.attr('src', evt.target.result);
 
-          // Add an onclick event to send the picture.
-          $new_img.click(post_image);
-      }
+    // Load the selected image as a preview.
+    $previewPlaceholder.append($newImg);
+  };
 
-      // Load the selected image.
-      $new_img.attr('src', evt.target.result);
+  const hideInstruction = function hideInstruction() {
+    $instruction.hide();
+  };
 
-      // Load the selected image as a preview.
-      $preview_placeholder.append($new_img);
-   };
+  const loadPreviewImage = function loadPreviewImage(evt) {
+    Console.log('loadPreviewImage called. evt: ', evt);
 
-   const remove_preview_image = function(evt) {
-      console.log('remove_preview_image called');
-      $preview_placeholder.empty();
-   };
+    // Hide the instruction.
+    hideInstruction();
 
-   const hide_instruction = function(evt) {
-      $instruction.hide();
-   }
+    // Render the preview image.
+    renderPreviewImage(evt);
+  };
 
-   const restore_instruction = function(evt) {
-      console.log('restore_instruction called');
-      $instruction.show();
-   }
+  // Set an event when the client selects an image.
+  $inputImage.change(function processSelectedImage(evt) {
+    Console.log('$inputImage change called. evt: ', evt);
 
-   // Send a POST request to the server's api and register the picture selected by the client.
-   // TODO: Replace this with the throwing animation.
-   const post_image = function(evt) {
-       evt.preventDefault();
+    // Retrieve the selected image.
+    if (this.files.length !== 0) {
+      const file = this.files[0];
+      const reader = new global.FileReader();
+      reader.readAsDataURL(file); // The data will be encoded as base64.
 
-       const src = evt.target.src;
-       //console.log('src: ', src);
-       //let $pictureForm = $('form[name=picture]');
+      // Set a callback function to render the selected image when the file is loaded.
+      reader.onload = loadPreviewImage;
+    }
+  });
+};
 
-       // Send a post request
-       $.ajax({
-           url: 'picture',
-           type: 'POST',
-           data: JSON.stringify({
-               data: src
-           }),
-           // contentType: false,       // The content type used when sending data to the server.
-           //  cache: false,             // To unable request pages to be cached.
-           // processData: false,       // Needs to be set 'false' since I am uploading an image.
-           success: function(data) {
-               $main_div.append('<p>' + 'POST succeeded. data:' + data + '</p>');
-               console.log('data:', data)
-
-               //// Send the image directly to the screen app.
-               //send(src);
-
-               // Remove the picture from the img element.
-               remove_preview_image();
-
-               // Restore the icon.
-               restore_instruction();
-           },
-       });
-   };
-});
+$(document).ready(app(this));
