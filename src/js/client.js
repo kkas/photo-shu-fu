@@ -1,20 +1,10 @@
-// TODO: Move this to somewhere else.
-const Console = {
-  log: function logToConsole(...args) {
-    console.log(args);
-  },
-};
+import { Console, concatStrings } from './myCommon.js';
 
-const app = function mainApp(global) {
+const app = function mainApp() {
   const $mainDiv = $('#main');
   const $inputImage = $('#image');
   const $instruction = $('#instruction');
   const $previewPlaceholder = $('#preview_placeholder');
-
-  // TODO: Move this to somewhere else.
-  const concatStrings = function concatenateStrings(...args) {
-    return args.join(',');
-  };
 
   const removePreviewImage = function removePreviewImage() {
     Console.log('removePreviewImage called');
@@ -94,7 +84,7 @@ const app = function mainApp(global) {
     // Retrieve the selected image.
     if (this.files.length !== 0) {
       const file = this.files[0];
-      const reader = new global.FileReader();
+      const reader = new FileReader();
       reader.readAsDataURL(file); // The data will be encoded as base64.
 
       // Set a callback function to render the selected image when the file is loaded.

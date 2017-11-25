@@ -2,10 +2,11 @@
     "extends": "airbnb-base",
     "globals": {
        "$": false,
-       "location": false,
+       "window": false,
        "document": false,
        "console": false,
-       "ws": false,
+       "WebSocket": false,
+       "FileReader": false,
        "succsss": false
     }
 }
