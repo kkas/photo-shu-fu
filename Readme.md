@@ -5,6 +5,7 @@ Photo-Shu-Fu is a photo slide show application that enables the users to communi
 ## How to Run this app
 Requirements:
 - [heroku CLI]
+- web pack
 - Python 3.6.1
 - Python Packages
 ```
