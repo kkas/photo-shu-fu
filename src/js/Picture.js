@@ -1,5 +1,5 @@
-import startAnimation from './animation.js';
-import { Console } from './myCommon.js';
+import startAnimation from './animation';
+import { Console } from './myCommon';
 
 // Picture class using Pseudoclassical pattern
 const Picture = function Picture(num, path) {

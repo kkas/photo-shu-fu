@@ -1,5 +1,5 @@
 import anime from 'animejs';
-import { Console, concatStrings } from './myCommon.js';
+import { Console, concatStrings } from './myCommon';
 
 /* Reset the picture's position to the left of the viewport, where is the starting
   point of the 4th animation, which is scrolling to the right end of the viewport.

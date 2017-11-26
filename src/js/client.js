@@ -1,4 +1,4 @@
-import { Console, concatStrings } from './myCommon.js';
+import { Console, concatStrings } from './myCommon';
 
 const app = function mainApp() {
   const $mainDiv = $('#main');

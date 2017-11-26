@@ -1,6 +1,5 @@
-import startAnimation from './animation.js';
-import { Console, concatStrings } from './myCommon.js';
-import Picture from './Picture.js';
+import { Console, concatStrings } from './myCommon';
+import Picture from './Picture';
 
 (function mainApp() {
   const pictures = [];
