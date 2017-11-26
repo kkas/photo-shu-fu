@@ -92,8 +92,8 @@ const firstAnimation = function firstAnimation(myId) {
   });
 };
 
-const startAnimation = function startAnimation(myId) {
-  firstAnimation(myId);
+const startAnimation = function startAnimation(picture) {
+  firstAnimation(picture.id);
 };
 
 export default startAnimation;

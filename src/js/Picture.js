@@ -1,11 +1,11 @@
 import startAnimation from './animation.js';
-import { Console, concatStrings } from './myCommon.js';
+import { Console } from './myCommon.js';
 
 // Picture class using Pseudoclassical pattern
 const Picture = function Picture(num, path) {
   this.id = this.generateImgId(num);
   this.path = path;
-  this.$elem;
+  this.$elem = null;
   this.initElement(num);
 };
 Picture.prototype.generateImgId = function generateImgId(num) {
@@ -22,6 +22,9 @@ Picture.prototype.initElement = function initElement(zIndex) {
 Picture.prototype.getElement = function getElement() {
   Console.log('getElement called');
   return this.$elem;
+};
+Picture.prototype.onLoad = function onLoad(f) {
+  this.$elem.on('load', f);
 };
 Picture.prototype.centering = function centering() {
   Console.log('Picture.centering is called.');
@@ -42,8 +45,10 @@ Picture.prototype.centering = function centering() {
   this.$elem.offset({ left: newPointX, top: newPointY });
 };
 Picture.prototype.animate = function animate() {
+  // Set the picture at the center of the screen.
   this.centering();
-  startAnimation(this.id);
+  // Add an eventListener for arter loading the image.
+  this.onLoad(startAnimation(this));
 };
 
 export default Picture;

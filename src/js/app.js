@@ -12,18 +12,8 @@ import Picture from './Picture.js';
 
     $('#main').append(picture.getElement());
 
-    // Add an eventListener for arter loading the image.
-
-    const addFirstAnimation = function addFirstAnimation() {
-      Console.log('addFirstAnimation called.');
-
-      // Make the picture to the center of the viewport.
-      picture.centering();
-
-      startAnimation(picture.id);
-    };
-
-    picture.getElement().on('load', addFirstAnimation);
+    // Start the animation of this picture.
+    picture.animate();
 
     pictures.push(picture);
   };
@@ -108,7 +98,6 @@ import Picture from './Picture.js';
 
     // Set the click event to the add button.
     $('#check_btn').click(() => {
-      // Console.log('anime.running: ', anime.running);
       ws.checkConnection();
     });
   });
