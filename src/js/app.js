@@ -1,31 +1,9 @@
 import anime from 'animejs';
 import { Console, concatStrings } from './myCommon.js';
+import Picture from './Picture.js';
 
 (function mainApp() {
   const pictures = [];
-
-  // Picture class using Pseudoclassical pattern
-  const Picture = function Picture(num, path) {
-    this.id = this.generateImgId(num);
-    this.path = path;
-    this.$elem;
-    this.initElement(num);
-  };
-  Picture.prototype.generateImgId = function generateImgId(num) {
-    return `newImg${num}`;
-  };
-  Picture.prototype.initElement = function initElement(zIndex) {
-    Console.log('initElement called');
-    this.$elem = $('<img>')
-      .attr('id', this.id)
-      .attr('src', this.path)
-      .attr('z-index', zIndex)
-      .addClass('newImg');
-  };
-  Picture.prototype.getElement = function getElement() {
-    Console.log('getElement called');
-    return this.$elem;
-  };
 
   /* Move the picture to the center of the viewport */
   const centering = function centeringPicture(id) {
