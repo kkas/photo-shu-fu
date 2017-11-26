@@ -1,4 +1,5 @@
-import { Console } from './myCommon.js';
+import startAnimation from './animation.js';
+import { Console, concatStrings } from './myCommon.js';
 
 // Picture class using Pseudoclassical pattern
 const Picture = function Picture(num, path) {
@@ -21,6 +22,28 @@ Picture.prototype.initElement = function initElement(zIndex) {
 Picture.prototype.getElement = function getElement() {
   Console.log('getElement called');
   return this.$elem;
+};
+Picture.prototype.centering = function centering() {
+  Console.log('Picture.centering is called.');
+  const $window = $(window);
+
+  // Calculate the center of the viewport on the x and y axises.
+  const halfPointX = $window.width() / 2;
+  const halfPointY = $window.height() / 2;
+
+  // Calculate the appropriate left coordinate of the picture.
+  const halfWidth = this.$elem.outerWidth(true) / 2;
+  const halfHeight = this.$elem.outerHeight(true) / 2;
+
+  const newPointY = halfPointY - halfHeight;
+  const newPointX = halfPointX - halfWidth;
+
+  // Apply the new coordinates to the picture.
+  this.$elem.offset({ left: newPointX, top: newPointY });
+};
+Picture.prototype.animate = function animate() {
+  this.centering();
+  startAnimation(this.id);
 };
 
 export default Picture;
