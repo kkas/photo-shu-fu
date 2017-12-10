@@ -18,13 +18,13 @@
   },
   "homepage": "https://github.com/kkas/photo-shu-fu#readme",
   "devDependencies": {
-    "clean-webpack-plugin": "^0.1.17",
     "eslint": "^4.11.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
-    "webpack": "^3.8.1"
   },
   "dependencies": {
+    "clean-webpack-plugin": "^0.1.17",
     "animejs": "^2.2.0"
+    "webpack": "^3.8.1"
   }
 }
