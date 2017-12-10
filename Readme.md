@@ -36,6 +36,25 @@ DATABASE_URL='postgresql+psycopg2://username@localhost:5432/localdb'
 ```
 See more details here for running app locally. (https://devcenter.heroku.com/articles/heroku-local)
 
+### How to Run the App on Heroku
+
+#### Add the Following Buildpacks
+
+```sh
+heroku buildpacks:set https://github.com/kreativgebiet/heroku-buildpack-webpack
+heroku buildpacks:add --index 1 heroku/nodejs
+heroku buildpacks:add --index 2 heroku/python
+```
+
+Make sure you have added the following buildpacks.
+```sh
+heroku buildpacks
+=== photo-shu-fu Buildpack URLs
+1. heroku/nodejs
+2. https://github.com/kreativgebiet/heroku-buildpack-webpack
+3. heroku/python
+```
+
 ### Start the app
 ```sh
 heroku local
