@@ -94,10 +94,5 @@ import Picture from './Picture';
       }
     };
     const intervalID = setInterval(keepConnection, INTERVAL);
-
-    // Set the click event to the add button.
-    $('#check_btn').click(() => {
-      ws.checkConnection();
-    });
   });
 }(this));
