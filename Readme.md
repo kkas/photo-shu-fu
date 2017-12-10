@@ -41,9 +41,9 @@ See more details here for running app locally. (https://devcenter.heroku.com/art
 #### Add the Following Buildpacks
 
 ```sh
-heroku buildpacks:set https://github.com/kreativgebiet/heroku-buildpack-webpack
 heroku buildpacks:add --index 1 heroku/nodejs
-heroku buildpacks:add --index 2 heroku/python
+heroku buildpacks:add --index 2 https://github.com/kreativgebiet/heroku-buildpack-webpack
+heroku buildpacks:add --index 3 heroku/python
 ```
 
 Make sure you have added the following buildpacks.
