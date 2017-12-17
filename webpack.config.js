@@ -1,5 +1,6 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
   entry: {
@@ -13,5 +14,9 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['static/js']),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+    }),
   ],
 };

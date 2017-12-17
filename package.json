@@ -23,8 +23,9 @@
     "eslint-plugin-import": "^2.8.0"
   },
   "dependencies": {
-    "clean-webpack-plugin": "^0.1.17",
     "animejs": "^2.2.0",
+    "clean-webpack-plugin": "^0.1.17",
+    "jquery": "^3.2.1",
     "webpack": "^3.8.1"
   }
 }
