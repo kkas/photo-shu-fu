@@ -1,11 +1,16 @@
 html, body {
   max-width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 img {
-  position: absolute;
   padding: 10px;
   background-color: #fce0b8;
-  max-height: 80%;
+  height: 100vh;
+}
+
+.center {
+  display: block;
+  margin: 0 auto;
+  margin-left: auto;
 }
