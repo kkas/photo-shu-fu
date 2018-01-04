@@ -1,99 +1,136 @@
 import anime from 'animejs';
-import { Console, concatStrings } from './myCommon';
+import _ from 'lodash';
+import { concatStrings } from './myCommon';
 
-/* Reset the picture's position to the left of the viewport, where is the starting
-  point of the 4th animation, which is scrolling to the right end of the viewport.
-*/
-const resetPosition = function resetPosition(myId) {
-  const $elem = $(concatStrings('#', myId));
-  // the width here includes the margin.
-  $elem.css({ left: concatStrings((-1 * $elem.outerWidth(true)), 'px') });
+const smallImage = 0.2;
+
+/* Calculate the starting left position for the picture element. */
+const calcLeftStart = function calcLeftStart(element) {
+  const viewportWidth = window.innerWidth;
+  const { offsetLeft } = element;
+  return viewportWidth - offsetLeft;
 };
 
-/* 4th Animation: Scroll to the right end of the viewport. When the picture reaches
-   the outside of the viewport. Its position gets reset to the left and repeat. */
-const fourthAnimation = function fourthAnimation(myId) {
-  Console.log('fourthAnimation called. myId:', myId);
+/* Calculate the ending left position for the picture element. */
+const calcLeftEnd = function calcLeftEnd(element) {
+  const { offsetLeft } = element;
+  const { width } = element;
+  return (offsetLeft + width) * -1;
+};
 
-  const $image = $(concatStrings('#', myId));
-  const $window = $(window);
+/**
+ * Returns the minimum possible value that the element(picture) can shift.
+ * This is calcucated by the height and y position values after "transform: scale"
+ * has been applied.
+ */
+const getMinDelta = function getMinDelta(element) {
+  const clientRect = element.getBoundingClientRect();
+  return clientRect.y * -1;
+};
 
-  // Reset position.
-  resetPosition(myId);
+/**
+ * Returns the maximum possible value that the element(picture) can shift.
+ * This is calcucated by the height and y position values after "transform: scale"
+ * has been applied.
+ */
+const getMaxDelta = function getMaxDelta(element) {
+  const viewportHeight = window.innerHeight;
+  const clientRect = element.getBoundingClientRect();
+  return viewportHeight - clientRect.y - clientRect.height;
+};
 
-  anime({
-    targets: concatStrings('#', myId),
+/**
+ * Returns the new possible y value. The value is calculated by the
+ * size and the position of the element after "transform: scale" is applied.
+ */
+const getRandomY = function getRandomY(element) {
+  const min = getMinDelta(element);
+  const max = getMaxDelta(element);
+  return _.random(min, max);
+};
+
+/* 4th Animation: Scroll to the right end of the viewport. When the picture gets off
+   the viewport, its position gets reset to the left and repeat. */
+const fourthAnimation = function fourthAnimation(picture, constParams) {
+  const targetId = concatStrings('#', picture.id);
+  const element = document.getElementById(picture.id);
+  const leftStart = calcLeftStart(element);
+  const leftEnd = calcLeftEnd(element);
+  const newY = getRandomY(element);
+
+  anime(_.assign({
+    targets: targetId,
     loop: true,
-    duration: 100000,
+    duration: 14000,
     easing: 'linear',
-    translateX: function translateX() {
-      // Move this picture until it gets off of the viewport.
-      return ($window.width() + $image.outerWidth(true)) - $image.offset().left;
-    },
-  });
+    translateX: [leftStart, leftEnd],
+    translateY: [newY, newY],
+    scale: smallImage,
+  }, constParams));
 };
 
 /* 3rd Animation: Sliding to the right end until the picture reaches off screen. */
-const thirdAnimation = function thirdAnimation(myId) {
-  Console.log('thirdAnimation called. myId:', myId);
+const thirdAnimation = function thirdAnimation(picture, constParams) {
+  const targetId = concatStrings('#', picture.id);
+  const element = document.getElementById(picture.id);
+  const leftEnd = calcLeftEnd(element);
 
-  const viewportWidth = $(window).width();
-
-  anime({
-    targets: concatStrings('#', myId),
-    duration: 100000,
+  anime(_.assign({
+    targets: targetId,
+    duration: 14000,
     easing: 'linear',
-    left: viewportWidth,
+    translateX: leftEnd,
+    scale: smallImage,
     complete: function complete() {
-      Console.log('third completed.');
-      fourthAnimation(myId);
+      fourthAnimation(picture, constParams);
     },
-  });
-}; // end of thirdAnimation
+  }, constParams));
+};
 
 /* 2nd Animation: flipping and moving to far side. */
-const secondAnimation = function secondAnimation(myId) {
-  Console.log('secondAnimation called. myId:', myId);
-  anime({
-    targets: concatStrings('#', myId),
-    duration: 5000,
+const secondAnimation = function secondAnimation(picture, constParams) {
+  const targetId = concatStrings('#', picture.id);
+
+  anime(_.assign({
+    targets: targetId,
+    duration: 4500,
     easing: 'easeOutExpo',
-    width: function width() {
-      const id = concatStrings('#', myId);
-      const newWidth = $(id).width() * 0.3;
-      return concatStrings(newWidth, 'px');
-    },
-    height: function height() {
-      const id = concatStrings('#', myId);
-      const newHeight = $(id).height() * 0.3;
-      return concatStrings(newHeight, 'px');
-    },
-    top: function top() { return concatStrings(anime.random(0, 100), 'vh'); },
-    left: function left() { return concatStrings(anime.random(0, 100), 'vw'); },
-    rotateX: [0, 360],
+    scale: [1, smallImage],
+    rotateX: '1turn',
     complete: function complete() {
-      Console.log('secondAnimation.complete');
-      thirdAnimation(myId);
+      thirdAnimation(picture, constParams);
     },
-  });
+  }, constParams));
 };
 
 /* 1st Animation: slide in + rotation */
-const firstAnimation = function firstAnimation(myId) {
-  Console.log('firstAnimation called.');
-  anime({
-    targets: concatStrings('#', myId),
-    rotate: [{ value: '1turn', easing: 'easeOutExpo' }],
-    duration: 1000,
+const firstAnimation = function firstAnimation(picture, constParams) {
+  const targetId = concatStrings('#', picture.id);
+
+  anime(_.assign({
+    targets: targetId,
+    scale: ['*=2', 1],
+    duration: 1500,
     complete: function completeFirstAnimation() {
-      Console.log('first animation completed..');
-      secondAnimation(myId);
+      secondAnimation(picture, constParams);
     },
+  }, constParams));
+};
+
+const preparePicture = function preparePicture(picture) {
+  const rotateStyleY = ['20deg', '-20deg'];
+
+  return Object.freeze({
+    rotate: rotateStyleY[picture.getNumericPartOfId() % 2],
   });
 };
 
+/* Entry point of the animations. */
 const startAnimation = function startAnimation(picture) {
-  firstAnimation(picture.id);
+  const animationConstParams = preparePicture(picture);
+  const thisPicture = _.cloneDeep(picture);
+
+  firstAnimation(thisPicture, animationConstParams);
 };
 
 export default startAnimation;

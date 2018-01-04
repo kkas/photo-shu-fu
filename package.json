@@ -26,6 +26,7 @@
     "animejs": "^2.2.0",
     "clean-webpack-plugin": "^0.1.17",
     "jquery": "^3.2.1",
+    "lodash": "^4.17.4",
     "webpack": "^3.8.1"
   }
 }

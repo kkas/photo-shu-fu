@@ -1,5 +1,6 @@
 html, body {
-  max-width: 100%;
+  height: 100vh;
+  width: 100vw;
   overflow: hidden;
 }
 
@@ -9,8 +10,15 @@ img {
   height: 100vh;
 }
 
-.center {
-  display: block;
-  margin: 0 auto;
-  margin-left: auto;
+.initPosition {
+  position: absolute;
+  right: 10vw;
+}
+
+.larger {
+  transform: scale(1.5l) ;
+}
+
+.hidden {
+  display: none;
 }

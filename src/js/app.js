@@ -39,16 +39,13 @@ import Picture from './Picture';
     };
 
     ws.onmessage = function onmessage(evt) {
-      Console.log('ws.onmessage called.');
-      Console.log('evt.data:', evt.data);
-
       const data = JSON.parse(evt.data);
+
       if (data.msg && data.msg === 'PONG') {
         return;
       }
 
       const url = concatStrings(window.location.origin, '/picture/', data.id);
-      Console.log('url for the image: ', url);
 
       /* Retrieve the image using the url.
          If success, set the image to the screen.
@@ -63,7 +60,6 @@ import Picture from './Picture';
     };
 
     ws.checkConnection = function checkConnection() {
-      Console.log('ws.checkConnection called.');
       this.sendPING();
     };
 
@@ -85,12 +81,8 @@ import Picture from './Picture';
     // https://devcenter.heroku.com/articles/error-codes#h15-idle-connection
     const INTERVAL = 10000; // 10sec
     const keepConnection = function keepConnection() {
-      Console.log('send_PING called');
       if (ws) {
-        Console.log('true');
         ws.sendPING();
-      } else {
-        Console.log('false');
       }
     };
     const intervalID = setInterval(keepConnection, INTERVAL);

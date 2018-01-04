@@ -1,3 +1,4 @@
+// import _ from 'lodash';
 import startAnimation from './animation';
 import { Console, concatStrings } from './myCommon';
 
@@ -18,15 +19,20 @@ Picture.prototype.initElement = function initElement(zIndex) {
     .attr('src', this.path)
     .attr('z-index', zIndex)
     .addClass('newImg');
+
   // Set the picture at the center of the screen for when the image is loaded.
-  this.$elem.on('load', (event) => { $(concatStrings('#', event.target.id)).addClass('center'); });
+  this.$elem.on('load', (event) => {
+    $(concatStrings('#', event.target.id)).addClass('initPosition');
+  });
 };
 Picture.prototype.getElement = function getElement() {
-  Console.log('getElement called');
   return this.$elem;
 };
 Picture.prototype.animate = function animate() {
   startAnimation(this);
+};
+Picture.prototype.getNumericPartOfId = function getNumericPartOfId() {
+  return this.id.split('newImg')[1];
 };
 
 export default Picture;
