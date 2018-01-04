@@ -22,8 +22,8 @@ const animate = function animate(id) {
 
   anime({
     targets: targetId,
-    duration: 1000,
-    easing: 'easeInQuart',
+    duration: 2000,
+    easing: 'easeInCubic',
     translateY: clientRect.height * -1,
     complete: function complete() {
       // Remove the picture from the img element.
