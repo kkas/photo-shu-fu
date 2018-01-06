@@ -14,9 +14,5 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['static/js']),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-    }),
   ],
 };

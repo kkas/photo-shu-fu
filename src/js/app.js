@@ -5,11 +5,10 @@ import Picture from './Picture';
   const pictures = [];
 
   const addImage = function addImage(url) {
-    Console.log('addImage called.');
-
     const picture = new Picture(pictures.length, url);
 
-    $('#main').append(picture.getElement());
+    const mainElem = document.getElementById('main');
+    mainElem.appendChild(picture.getElement());
 
     // Start the animation of this picture.
     picture.animate();
@@ -17,15 +16,36 @@ import Picture from './Picture';
     pictures.push(picture);
   };
 
-  /*
-    Get the image from the url.
-    This method returns jqXHR, so that the caller may use it as a Promise object.
-  */
-  const getImage = function getImage(url) {
-    return $.get(url, () => { Console.log('getImage success.'); });
+  const retrieveImage = function retrieveImage(url, callback) {
+    // Make a GET reqest.
+    const httpRequest = new XMLHttpRequest();
+
+    // Set a handler to process the response.
+    httpRequest.onreadystatechange = function stateChangeHandler() {
+      try {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+          if (httpRequest.status === 200) {
+            const response = httpRequest.responseText;
+            Console.log('response:', response);
+            callback(response);
+          } else {
+            // Error occured.
+            Console.error('There was a problem with the request.');
+          }
+        }
+      } catch (e) {
+        Console.error('Caught Exception: ', e.description);
+      }
+    };
+
+    // Process the request asynchronously.
+    httpRequest.open('GET', url, true);
+
+    // Send the request
+    httpRequest.send(null);
   };
 
-  $(document).ready(() => {
+  window.addEventListener('load', () => {
     // ------------
     // Websocket
     // ------------
@@ -47,16 +67,7 @@ import Picture from './Picture';
 
       const url = concatStrings(window.location.origin, '/picture/', data.id);
 
-      /* Retrieve the image using the url.
-         If success, set the image to the screen.
-      */
-      $.when(getImage(url))
-        .done((response) => {
-          addImage(response);
-        })
-        .fail((err) => {
-          Console.log('error occured:', err);
-        });
+      retrieveImage(url, addImage);
     };
 
     ws.checkConnection = function checkConnection() {

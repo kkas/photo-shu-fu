@@ -1,16 +1,22 @@
 import anime from 'animejs';
 import { Console, concatStrings } from './myCommon';
 
-const $inputImage = $('#image');
-const $instruction = $('#instruction');
-const $previewPlaceholder = $('#preview_placeholder');
+const inputImage = document.getElementById('inputImage');
+const instruction = document.getElementById('instruction');
+const previewPlaceholder = document.getElementById('preview_placeholder');
+
+const removeChildren = function removeChildren(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
+};
 
 const removePreviewImage = function removePreviewImage() {
-  $previewPlaceholder.empty();
+  removeChildren(previewPlaceholder);
 };
 
 const restoreInstruction = function restoreInstruction() {
-  $instruction.show();
+  instruction.setAttribute('style', 'display: block');
 };
 
 const animate = function animate(id) {
@@ -36,23 +42,45 @@ const animate = function animate(id) {
 };
 
 // Send a POST request to the server's api and register the picture selected by the client.
-// TODO: Replace this with the throwing animation.
 const postImage = function postImage(evt) {
   evt.preventDefault();
 
   const imageSrc = evt.target.src;
 
   // Send a post request
-  $.ajax({
-    url: 'picture',
-    type: 'POST',
-    data: JSON.stringify({
-      data: imageSrc,
-    }),
-    success: function postData(data) {
-      Console.log('data:', data);
-    },
-  });
+  const httpRequest = new XMLHttpRequest();
+  const formData = new FormData();
+
+  // Set the contents
+  formData.set('data', imageSrc);
+
+  // Set a handler to process the response.
+  httpRequest.onreadystatechange = function stateChangeHandler() {
+    try {
+      if (httpRequest.readyState === XMLHttpRequest.DONE) {
+        if (httpRequest.status === 200) {
+          const response = JSON.parse(httpRequest.responseText);
+          Console.log('response:', response);
+        } else {
+          // Error occured.
+          Console.error('There was a problem with the request.');
+        }
+      }
+    } catch (e) {
+      Console.error('Caught Exception: ', e.description);
+    }
+  };
+
+  // Process the request asynchronously.
+  httpRequest.open('POST', 'picture', true);
+
+  // Set the request header.
+  httpRequest.setRequestHeader('Content-Type', 'application/json');
+
+  // Send the data.
+  httpRequest.send(JSON.stringify({
+    data: imageSrc,
+  }));
 };
 
 const sendImage = function sendImage(evt) {
@@ -64,24 +92,25 @@ const sendImage = function sendImage(evt) {
 
 const renderPreviewImage = function renderPreviewImage(evt) {
   // Retrieve or create the new Img element.
-  let $newImg = $('#selected_image');
+  let newImg = document.getElementById('selected_image');
 
-  if ($newImg.length === 0) {
+  if (newImg === null) {
     // Create one.
-    $newImg = $("<img id='selected_image'>");
+    newImg = document.createElement('img');
+    newImg.id = 'selected_image';
 
     // Add an onclick event to send the picture.
-    $newImg.click(sendImage);
+    newImg.addEventListener('click', sendImage);
   }
   // Load the selected image.
-  $newImg.attr('src', evt.target.result);
+  newImg.setAttribute('src', evt.target.result);
 
   // Load the selected image as a preview.
-  $previewPlaceholder.append($newImg);
+  previewPlaceholder.appendChild(newImg);
 };
 
 const hideInstruction = function hideInstruction() {
-  $instruction.hide();
+  instruction.setAttribute('style', 'display: none');
 };
 
 const loadPreviewImage = function loadPreviewImage(evt) {
@@ -93,7 +122,7 @@ const loadPreviewImage = function loadPreviewImage(evt) {
 };
 
 // Set an event when the client selects an image.
-$inputImage.change(function processSelectedImage() {
+inputImage.addEventListener('change', function processSelectedImage() {
   // Retrieve the selected image.
   if (this.files.length !== 0) {
     const file = this.files[0];

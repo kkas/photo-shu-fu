@@ -5,8 +5,10 @@
        "window": false,
        "document": false,
        "console": false,
+       "alert": false,
+       "XMLHttpRequest": false,
+       "FormData": false,
        "WebSocket": false,
-       "FileReader": false,
-       "succsss": false
+       "FileReader": false
     }
 }
