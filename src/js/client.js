@@ -5,21 +5,21 @@ const inputImage = document.getElementById('inputImage');
 const instruction = document.getElementById('instruction');
 const previewPlaceholder = document.getElementById('preview_placeholder');
 
-const removeChildren = function removeChildren(element) {
+const removeChildren = (element) => {
   while (element.firstChild) {
     element.removeChild(element.firstChild);
   }
 };
 
-const removePreviewImage = function removePreviewImage() {
+const removePreviewImage = () => {
   removeChildren(previewPlaceholder);
 };
 
-const restoreInstruction = function restoreInstruction() {
+const restoreInstruction = () => {
   instruction.setAttribute('style', 'display: block');
 };
 
-const animate = function animate(id) {
+const animate = (id) => {
   const targetId = concatStrings('#', id);
   const element = document.getElementById(id);
   Console.log('targetId:', targetId);
@@ -31,7 +31,7 @@ const animate = function animate(id) {
     duration: 2000,
     easing: 'easeInCubic',
     translateY: clientRect.height * -1,
-    complete: function complete() {
+    complete: () => {
       // Remove the picture from the img element.
       removePreviewImage();
 
@@ -42,7 +42,7 @@ const animate = function animate(id) {
 };
 
 // Send a POST request to the server's api and register the picture selected by the client.
-const postImage = function postImage(evt) {
+const postImage = (evt) => {
   evt.preventDefault();
 
   const imageSrc = evt.target.src;
@@ -55,7 +55,7 @@ const postImage = function postImage(evt) {
   formData.set('data', imageSrc);
 
   // Set a handler to process the response.
-  httpRequest.onreadystatechange = function stateChangeHandler() {
+  httpRequest.onreadystatechange = () => {
     try {
       if (httpRequest.readyState === XMLHttpRequest.DONE) {
         if (httpRequest.status === 200) {
@@ -83,14 +83,14 @@ const postImage = function postImage(evt) {
   }));
 };
 
-const sendImage = function sendImage(evt) {
+const sendImage = (evt) => {
   // Animate the selected picture.
   animate(evt.target.id);
 
   postImage(evt);
 };
 
-const renderPreviewImage = function renderPreviewImage(evt) {
+const renderPreviewImage = (evt) => {
   // Retrieve or create the new Img element.
   let newImg = document.getElementById('selected_image');
 
@@ -109,11 +109,11 @@ const renderPreviewImage = function renderPreviewImage(evt) {
   previewPlaceholder.appendChild(newImg);
 };
 
-const hideInstruction = function hideInstruction() {
+const hideInstruction = () => {
   instruction.setAttribute('style', 'display: none');
 };
 
-const loadPreviewImage = function loadPreviewImage(evt) {
+const loadPreviewImage = (evt) => {
   // Hide the instruction.
   hideInstruction();
 
@@ -122,10 +122,12 @@ const loadPreviewImage = function loadPreviewImage(evt) {
 };
 
 // Set an event when the client selects an image.
-inputImage.addEventListener('change', function processSelectedImage() {
+inputImage.addEventListener('change', (event) => {
+  const targetElement = event.target;
+
   // Retrieve the selected image.
-  if (this.files.length !== 0) {
-    const file = this.files[0];
+  if (targetElement.files.length !== 0) {
+    const file = targetElement.files[0];
     const reader = new FileReader();
 
     reader.readAsDataURL(file); // The data will be encoded as base64.

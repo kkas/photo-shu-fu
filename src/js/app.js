@@ -4,11 +4,11 @@ import Picture from './Picture';
 (function mainApp() {
   const pictures = [];
 
-  const addImage = function addImage(url) {
+  const addImage = (url) => {
     const picture = new Picture(pictures.length, url);
 
     const mainElem = document.getElementById('main');
-    mainElem.appendChild(picture.getElement());
+    mainElem.appendChild(picture.element);
 
     // Start the animation of this picture.
     picture.animate();
@@ -16,7 +16,7 @@ import Picture from './Picture';
     pictures.push(picture);
   };
 
-  const retrieveImage = function retrieveImage(url, callback) {
+  const retrieveImage = (url, callback) => {
     // Make a GET reqest.
     const httpRequest = new XMLHttpRequest();
 
@@ -54,11 +54,11 @@ import Picture from './Picture';
     wsHost += path;
     const ws = new WebSocket(wsHost);
 
-    ws.onopen = function onopen() {
+    ws.onopen = () => {
       Console.log('ws.onopen called.');
     };
 
-    ws.onmessage = function onmessage(evt) {
+    ws.onmessage = (evt) => {
       const data = JSON.parse(evt.data);
 
       if (data.msg && data.msg === 'PONG') {
@@ -70,20 +70,20 @@ import Picture from './Picture';
       retrieveImage(url, addImage);
     };
 
-    ws.checkConnection = function checkConnection() {
+    ws.checkConnection = () => {
       this.sendPING();
     };
 
-    ws.sendPING = function sendPING() {
+    ws.sendPING = () => {
       ws.send('PING');
     };
 
-    ws.onclose = function onclose(close) {
+    ws.onclose = (close) => {
       Console.log('ws.onclose() called.');
       Console.log('close:', close);
     };
 
-    ws.onerror = function onerror(evt) {
+    ws.onerror = (evt) => {
       Console.log('ws.onerror() called.');
       Console.log('evt:', evt);
     };
@@ -91,7 +91,7 @@ import Picture from './Picture';
     // Periodic PING-PONG messaging to prevent the conncetion terminated by Heroku.
     // https://devcenter.heroku.com/articles/error-codes#h15-idle-connection
     const INTERVAL = 10000; // 10sec
-    const keepConnection = function keepConnection() {
+    const keepConnection = () => {
       if (ws) {
         ws.sendPING();
       }

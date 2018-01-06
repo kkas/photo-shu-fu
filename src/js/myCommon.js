@@ -1,14 +1,12 @@
 const Console = {
-  log: function logToConsole(...args) {
+  log: (...args) => {
     console.log(args);
   },
-  error: function logErrorToConsole(...args) {
+  error: (...args) => {
     console.error(args);
   },
 };
 
-const concatStrings = function concatenateStrings(...args) {
-  return args.join('');
-};
+const concatStrings = (...args) => args.join('');
 
 export { Console, concatStrings };
